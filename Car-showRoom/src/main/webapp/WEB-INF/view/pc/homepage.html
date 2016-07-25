@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="view/layout/template-1">
+<th:block layout:fragment="title">
+    <title>Home-Page</title>
+</th:block>
+<div layout:fragment="breakcrumb">
+    <span style="background-color: #222222">Home</span>
+</div>
+<div layout:fragment="left-pannel">
+    <div id="container" th:each="list :${listLogo}">
+        <div id="row33">
+            <a th:href="${list['branchUrl']}">
+                <img class="imgLogo" th:src="${list['branchLogo']}"/>
+            </a>
+        </div>
+    </div>
+</div>
+<div layout:fragment="mid-pannel">
+    <th:block layout:fragment="slider">
+        <th:block th:include="fragment/slider"></th:block>
+    </th:block>
+    <table border="1" style="width: 100%;">
+        <tr>
+            <th>ShowId</th>
+            <th>ShowName</th>
+            <th>Address</th>
+            <th>City</th>
+        </tr>
+        <tr th:each="list :${dataShow}">
+            <td th:text="${list['showId']}"></td>
+            <td th:text="${list['showName']}"></td>
+            <td th:text="${list['address']}"></td>
+            <td th:text="${list['city']}"></td>
+        </tr>
+    </table>
+</div>
+<div layout:fragment="right-pannel">
+    <div class="Wrap-right0" th:each="listright :${listCarInfo}">
+        <div class="Wrap-right1">
+            <img style="max-width: 100px" th:src="${listright['carImage']}"/>
+        </div>
+        <div class="Wrap-right2">
+            <span style="display: block" th:text ="${#strings.concat(listright['carName'],' ',listright['carMode'])}"></span>
+            <span style="display: block" th:text ="${listright['carMadeIn']}"></span>
+            <span style="display: block" th:text="${#strings.con cat(listright['carPrice'],' ','000 ($)')}"></span>
+        </div>
+    </div>
+
+</div>
+</html>

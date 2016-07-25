@@ -1,0 +1,335 @@
+<!--/*  Popup  */-->
+<link rel="stylesheet" type="text/css" th:href="@{/jps/css/buttons.css}"/>
+<style>
+    .scroll-btn {
+        position: relative;
+        height: 30px;
+        width: 100%;
+        background-size: 100% 30px;
+        line-height: 30px;
+        display: none;
+    }
+
+    .scroll-btn .page-no {
+        position: absolute;
+        top: 0;
+        right: 15px;
+        display: inline;
+        font-size: 14px;
+        font-weight: normal;
+    }
+</style>
+<div id="content-detail-popup" class="popup-template popup">
+    <div class="popup-content">
+        <div class="close-btn">
+            <img alt="" id="close-btn"
+                 th:src="@{/jps/img/icons/overray_close.png}"/>
+        </div>
+        <div style="float: left;">
+            <div style="margin-bottom: 25px; width: 700px; float: left;">
+                <div class="icon" style="width: 65px; float: left;">
+                    <div style="float: left">
+                        <img id="icon_new_img" src=""/> <img id="icon_age" src=""/>
+                    </div>
+                    <!--<div style="float: left;">-->
+                    <!--<img id="icon_group" src=""/>-->
+                    <!--</div>-->
+                </div>
+
+                <p id="title" class="line-clamp-2"
+                   style="font-size: 14px; float: left; width: 620px; padding-left: 15px;"></p>
+            </div>
+            <div class="pull-left"
+                 style="width: 31.333333%; margin-right: 2%;">
+                <div
+                        style="float: left; background: #000000; padding: 10px 20px; width: 100%; text-align: center;">
+                    <img id="thumbnail_img" style="max-width: 100%; max-height: 150px;"
+                         src=""/>
+
+                    <p id="copy_right" style="font-size: 7px;"></p>
+                </div>
+                <div style="float: left; padding: 10px 0px 35px 0px; width: 100%">
+                    <img id="provider-img" style="float: left" width="99"
+                         height="32" src=""/>
+                    <img id="supportTV_img"
+                         style="float: right; margin-right: 5px;" src=""/>
+                    <img id="supportSPN_img"
+                         style="float: right; padding-right: 5px;" src=""/>
+                </div>
+                <div id="viewBtn"
+                     style="float: left; padding-top: 0; width: 100%; text-align: center; display: none;">
+
+                    <a href=""
+                       class="href-button cbcss bs-165x40 obcss binline">
+                        視聴する
+                    </a>
+
+                </div>
+            </div>
+            <div class="col-8 pull-left" style="width: 66.66666667%; background: #000000;">
+                <div class="row">
+                    <div class="scroll-btn pull-left"
+                         id="scrollUp">
+                        <a href="javascript: scrollDetail(1)" class="blbcss obcss cbcss"
+                           style="color: rgb(0, 127, 230);">▲</a>
+
+                        <div class="page-no" id="page-prev"></div>
+                    </div>
+                    <div class="row"
+                         style="float: left; margin: 20px 25px; height: 215px; padding: 0;">
+                        <div id="description-text-content" class="row pull-left"
+                             style="font-size: 16px; padding: 0"></div>
+                    </div>
+                    <div class="scroll-btn pull-left"
+                         id="scrollDn">
+                        <a href="javascript: scrollDetail(-1)" class="blbcss obcss cbcss"
+                           style="color: rgb(0, 127, 230);">▼</a>
+
+                        <div class="page-no" id="page-next"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    //<![CDATA[
+    var detailTop = 0;
+    var detailTopOffset = 0;
+    var scrollTxtH = 215;
+    var txtHeight = 0;
+    var noPage = 0;
+    var curPage = 1;
+    var groupId = /*[[${groupId}]]*/"";
+    // create scroll if description is too long
+    function scrollDetail(no) {
+        detailTop += no * scrollTxtH;
+        if ((detailTop + txtHeight) > (detailTopOffset + scrollTxtH)) {
+            document.getElementById("scrollDn").style.display = "block";
+        }
+        if (detailTop != detailTopOffset) {
+            document.getElementById("scrollUp").style.display = "block";
+        }
+        if ((detailTop + txtHeight) <= (detailTopOffset + scrollTxtH)) {
+            document.getElementById("scrollDn").style.display = "none";
+        }
+        if (detailTop == detailTopOffset) {
+            document.getElementById("scrollUp").style.display = "none";
+        }
+        curPage = -(detailTop / scrollTxtH) + 1;
+        document.getElementById("page-prev").innerHTML = curPage + "/" + noPage;
+        document.getElementById("page-next").innerHTML = curPage + "/" + noPage;
+        document.getElementById("description-text-content").style.marginTop = detailTop
+        + "px";
+    }
+    // get height description
+    function getHeight() {
+        detailTop = 0;
+        detailTopOffset = 0;
+        scrollTxtH = 215;
+        txtHeight = 0;
+        noPage = 0;
+        curPage = 1;
+        txtHeight = document.getElementById("description-text-content").offsetHeight;
+        noPage = Math.ceil(txtHeight / scrollTxtH);
+        document.getElementById("page-prev").innerHTML = "1/" + noPage;
+        document.getElementById("page-next").innerHTML = "1/" + noPage;
+        document.getElementById("description-text-content").style.marginTop = 0;
+        document.getElementById("scrollDn").style.display = "none";
+        document.getElementById("scrollUp").style.display = "none";
+        if (txtHeight > scrollTxtH) {
+            document.getElementById("scrollDn").style.display = "block";
+        }
+    }
+
+
+    function goToDetail(contentId) {
+        var urlLink = rootUrl + 'video/content-detail-product?contentId=' + contentId + '&productId=' + productId + '&basePriceId=' + basePriceId;
+        var data;
+        $.ajax({
+            url: urlLink,
+            type: "GET",
+            cache: false,
+            data: {
+                data: data
+            },
+            success: function (data) {
+                //limit age 12 15 18 20
+                if (data == 12 || data == 15 || data == 18 || data == 20) {
+                    document.getElementById("limitContent").value = data;
+                    document.getElementById("logo-limit-age").src = rootUrl
+                    + "jps/img/limit-age-" + data + ".png";
+                    document.getElementById("number-limit").innerHTML = data;
+                    document.getElementById("number-limit-inline").innerHTML = data;
+                    document.getElementById("limit-age-popup").style.display = "block";
+                    document.getElementById("mask").style.display = "block";
+                    //gravure limit
+                } else if (data == 4) {
+                    document.getElementById("limitContent").value = 5;
+                    document.getElementById("gravure-popup").style.display = "block";
+                    document.getElementById("mask1").style.display = "block";
+                } else {
+                    setData(data);
+                    new Popup('content-detail-popup', 800, 400, true).show();
+                    getHeight();
+                }
+            }
+        });
+
+    }
+
+    function setData(data) {
+        document.getElementById('title').innerHTML = data.contentTitle
+        + '&nbsp;&nbsp;' + preventNullString(data.subTitle);
+        document.getElementById('thumbnail_img').src = data.contentThumbnailH;
+        (data.copyright) && (document.getElementById('copy_right').innerHTML = data.copyright);
+        document.getElementById('provider-img').src = data.manufacturerLogo;
+        if (checkMediaType(1, 0, data.deviceTypes) != -1 && data.viewable) {
+            var link = rootUrl + 'my-page/device-management/check-device'
+                    + '?contentId=' + data.contentId
+                    + '&productId=' + productId
+                    + '&isFree=' + isFree
+                    + '&productType=' + productType
+                    + '&basePriceId=' + basePriceId
+                    + '&groupId=' + groupId;
+            $('#viewBtn').find('a').attr('href', link);
+            document.getElementById('viewBtn').style.display = 'block';
+        } else {
+            $('#viewBtn').find('a').attr('href', '');
+            document.getElementById('viewBtn').style.display = 'none';
+        }
+
+        document.getElementById('icon_new_img').style.display = "";
+        if (data.endContent) {
+            document.getElementById('icon_new_img').src = getGeneralS3Icon() + 'end_icon.png';
+        } else if (data.newContent) {
+            document.getElementById('icon_new_img').src = getGeneralS3Icon() + 'new_icon.png';
+        } else {
+            document.getElementById('icon_new_img').style.display = "none";
+        }
+
+        document.getElementById('icon_age').style.display = "";
+        if ((data.ageRangeKey!='0' && data.ageRangeKey!=null)) {
+            switch (data.ageRangeKey + '') {
+                case '1':
+                    document.getElementById('icon_age').src = getGeneralS3Icon() + 'statIcon_pg12.png';
+                    break;
+                case '2':
+                    document.getElementById('icon_age').src = getGeneralS3Icon() + 'statIcon_r15.png';
+                    break;
+                case '3':
+                    document.getElementById('icon_age').src = getGeneralS3Icon() + 'statIcon_r18.png';
+                    break;
+                case '4':
+                    document.getElementById('icon_age').src = getGeneralS3Icon() + 'statIcon_r20.png';
+                    break;
+                default:
+                    document.getElementById('icon_age').style.display = "none";
+                    break;
+            }
+        } else {
+            document.getElementById('icon_age').style.display = "none";
+        }
+//        if (data.groupId != null) {
+//            document.getElementById('icon-group').src = getGeneralS3Icon() + 'statIcon_group.png';
+//        }
+
+        var listMediaType = data.deviceTypes;
+        if (checkMediaType(1, 0, listMediaType) != -1) {
+
+            document.getElementById('supportTV_img').src = rootUrl
+            + 'jps/img/device/statIcon_pcOK.png';
+            document.getElementById('supportSPN_img').src = rootUrl
+            + 'jps/img/device/statIcon_sumahoOK.png';
+        } else {
+            document.getElementById('supportTV_img').src = rootUrl
+            + 'jps/img/device/statIcon_pcNG.png';
+            document.getElementById('supportSPN_img').src = rootUrl
+            + 'jps/img/device/statIcon_sumahoNG.png';
+        }
+
+        /*[RC36][11615][QuanNNM][20150708][S]*/
+//        var duraHour = data.duration.substring(0, 2);
+//        duraHour = (duraHour == '00') ? '' : (duraHour.substring(0, 1) == '0' ? (duraHour.substring(1, 2) + '時間') : (duraHour.substring(0, 2) + '時間'));
+//        var duraMins = data.duration.substring(2, 4);
+//        duraMins = (duraMins == '00') ? '' : (duraMins.substring(0, 1) == '0' ? (duraMins.substring(1, 2) + '分') : (duraMins.substring(0, 2) + '分'));
+//        var duraSecs = data.duration.substring(4, 6);
+//        duraSecs = (duraSecs == '00') ? '' : (duraSecs.substring(0, 1) == '0' ? (duraSecs.substring(1, 2) + '秒') : (duraSecs.substring(0, 2) + '秒'));
+
+//        //show info of this content : year , country ...
+//        var info = "製作年： " + preventNullString(data.productionYear) + "年 <br/>";
+//        info += "製作国： " + preventNullString(data.country) + "<br/>";
+//        info += "再生時間：" + duraHour + duraMins + duraSecs + "<br/>";
+
+        //show info of this content : year , country ...
+        var info = "";
+        if(data.productionYear && parseInt(data.productionYear) > 0) {
+            info += "製作年： " + data.productionYear + "年 <br/>";
+        }
+
+        if(data.country) {
+            info += "製作国： " + data.country + "<br/>";
+        }
+
+        if(data.duration) {
+            var duraHour = data.duration.substring(0, 2);
+            duraHour = (duraHour == '00') ? '' : (duraHour.substring(0, 1) == '0' ? (duraHour.substring(1, 2) + '時間') : (duraHour.substring(0, 2) + '時間'));
+            var duraMins = data.duration.substring(2, 4);
+            duraMins = (duraMins == '00') ? '' : (duraMins.substring(0, 1) == '0' ? (duraMins.substring(1, 2) + '分') : (duraMins.substring(0, 2) + '分'));
+            var duraSecs = data.duration.substring(4, 6);
+            duraSecs = (duraSecs == '00') ? '' : (duraSecs.substring(0, 1) == '0' ? (duraSecs.substring(1, 2) + '秒') : (duraSecs.substring(0, 2) + '秒'));
+
+            info += "再生時間：" + duraHour + duraMins + duraSecs + "<br/>";
+        }
+        /*[RC36][11615][QuanNNM][20150708][E]*/
+
+        // set if this content can be download , show three field サイズ , 音声 , 字幕
+        var downloadInfo = "";
+        if (content.download) {
+            downloadInfo += 'サイズ : ' + preventNullString(data.fileSize)
+            + '<br/>' + '音声  : '
+            + preventNullString(data.voiceInformation) + '<br/>'
+            + '字幕  : ' + preventNullString(data.captionInformation)
+            + '<br/><br/>';
+        }
+        // show description + actor
+        if (data.actor != null && data.actor != "") {
+            document.getElementById('description-text-content').innerHTML = info
+            + downloadInfo + "<br/>▼作品ストーリー<br/>" + preventNullString(data.description) + '<br/>▼スタッフ／キャスト<br/>' + data.actor;
+        } else {
+            document.getElementById('description-text-content').innerHTML = info
+            + downloadInfo + "<br/>▼作品ストーリー<br/>" + preventNullString(data.description);
+        }
+    }
+
+    function preventNullString(string) {
+        if (!string) {
+            string = "";
+        }
+        return string;
+    }
+
+    function checkMediaType(obj, start, array) {
+        for (var i = (start || 0), j = array.length; i < j; i++) {
+            if (array[i] === obj) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    //For back from player/complete page, show popup of content.
+    function getUrlVariables(name) {
+        var vars = {};
+        var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function(m,key,value) {
+            vars[ decodeURIComponent(key)] = decodeURIComponent(value);
+        });
+        return vars[name];
+    }
+    var contentIdPopup = getUrlVariables("contentIdPopup");
+    if(document.getElementById(contentIdPopup)){
+        goToDetail(contentIdPopup);
+    }
+    //]]>
+</script>
+<!--/*  end Popup  */-->

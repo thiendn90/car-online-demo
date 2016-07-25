@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="view/layout/template-1">
+<th:block layout:fragment="title">
+      <title>Register member</title>
+</th:block>
+<div layout:fragment="breakcrumb">
+      <span style="background-color: #222222">Home :> Register</span>
+</div>
+<div layout:fragment ="mid-pannel">
+      <div style="width: 100%">
+            <table cellpadding="1" border="1" style="width: 60%;">
+                  <tr>
+                        <th>UserName</th>
+                        <td>
+                              <input type="text" id="txtUserName"/>
+                        </td>
+                  </tr>
+                  <tr>
+                        <th>Password</th>
+                        <td>
+                              <input type="password" id="txtpassword"/>
+                        </td>
+                  </tr>
+                  <tr>
+                        <th>FullName</th>
+                        <td>
+                              <input type="text" id="txtFullName"/>
+                        </td>
+                  </tr>
+                  <tr>
+                        <th>Email</th>
+                        <td>
+                              <input type="text" id="txtEmail"/>
+                        </td>
+                  </tr>
+                  <tr>
+                        <th>PhoneNumber</th>
+                        <td>
+                              <input type="number" id="txtPhone" />
+                        </td>
+                  </tr>
+                  <tr>
+                        <th>PostalCode</th>
+                        <td>
+                              <input type="number" id="txtPostalCode"/>
+                        </td>
+                  </tr>
+                  <tr>
+                        <th>Address</th>
+                        <td>
+                              <input type="text" id="txtAddress"/>
+                        </td>
+                  </tr>
+            </table>
+      </div>
+</div>
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns="http://www.w3.org/1999/xhtml"
+      layout:decorator="view/layout/basic-layout">
+<th:block layout:fragment="logo">
+      <div class="img">
+            <img th:src="@{/assets/img/logo/LOGO.png}" alt="logo"/>
+      </div>
+</th:block>
+<th:block layout:fragment="nav-menu">
+      <th:block th:include="fragment/header"></th:block>
+</th:block>
+<div layout:fragment="content" class="Wrap">
+      <div class="col-2" layout:fragment="left-pannel"></div>
+      <div class="col-9" layout:fragment="mid-pannel">
+            <th:block layout:fragment="slider"></th:block>
+      </div>
+      <div class="col-3" layout:fragment="right-pannel"></div>
+</div>
+</html>
